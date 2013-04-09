@@ -1,6 +1,7 @@
 import hashlib, binascii, rand_string
 
 t='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+digits58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 
 """The initial version of the 'numtowif', 'wiftonum', and 'validwif' functions
 are contributed by JeromeS at BitcoinTalk.org
@@ -17,6 +18,17 @@ def wiftonum(wifpriv):
 
 def validwif(wifpriv):
     return numtowif(wiftonum(wifpriv))==wifpriv
+
+def decode_base58(bc, length):
+    n = 0
+    for char in bc:
+        n = n * 58 + digits58.index(char)
+    return n.to_bytes(length, 'big')
+
+# From RosettaCode http://rosettacode.org/wiki/Bitcoin/address_validation#Python
+def check_bc(bc):
+    bcbytes = decode_base58(bc, 25)
+    return bcbytes[-4:] == hashlib.sha256(hashlib.sha256(bcbytes[:-4]).digest()).digest()[:4]
 
 def new_priv_key():
     priv_key = rand_string.rand_hex(32)
