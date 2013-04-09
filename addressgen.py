@@ -23,7 +23,13 @@ def decode_base58(bc, length):
     n = 0
     for char in bc:
         n = n * 58 + digits58.index(char)
-    return n.to_bytes(length, 'big')
+    return to_bytes(n, length)
+
+def to_bytes(n, length):
+    bytelist = ''
+    for i in reversed(range(length)):
+        bytelist = bytelist + chr(int(bytes(n >> i*8 & 0xff)))
+    return bytelist
 
 # From RosettaCode http://rosettacode.org/wiki/Bitcoin/address_validation#Python
 def check_bc(bc):
