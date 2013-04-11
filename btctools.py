@@ -71,6 +71,12 @@ def new_addy(pk):
         address=l+address
     return '1'+address
 
+def key_gen():
+    while True:
+        pk = new_pk()
+        addy = new_addy(pk)
+        yield (pk, addy)
+
 class Key:
     """This will hold the following information:
         Private Key in both String and Int form
