@@ -1,4 +1,4 @@
-import hashlib, binascii, rand_string, ecdsa
+import hashlib, binascii, rand_string, ecdsa, random, os
 
 t='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 digits58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
@@ -47,9 +47,9 @@ def check_bc(bc):
     return bcbytes[-4:] == hashlib.sha256(hashlib.sha256(bcbytes[:-4]).digest()).digest()[:4]
 
 def new_pk():
-    priv_key = rand_string.rand_hex(32)
+    priv_key = binascii.b2a_hex(os.urandom(32))
     while ( 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 < int(priv_key,16) < 0x1 ):
-        priv_key = rand_string.rand_hex(32)
+        priv_key = binascii.b2a_hex(os.urandom(32))
     return priv_key
 
 def new_addy(pk):
